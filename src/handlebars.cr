@@ -1,10 +1,10 @@
-module GeneralHandler
+module Handlebars
   VERSION = {{ `shards version __DIR__`.chomp.stringify }}
 
   class NoHandlerError < Exception; end
 
   abstract class Handler(T)
-    property next : GeneralHandler::Handler(T) | (T ->) | Nil
+    property next : Handlebars::Handler(T) | (T ->) | Nil
 
     abstract def call(context : T)
 
@@ -12,20 +12,20 @@ module GeneralHandler
       if next_handler = @next
         next_handler.call(context)
       else
-        raise GeneralHandler::NoHandlerError.new("No more handlers")
+        raise Handlebars::NoHandlerError.new("No more handlers")
       end
     end
   end
 
   abstract class Server(T)
-    property handler : GeneralHandler::Handler(T)
+    property handler : Handlebars::Handler(T)
 
-    def initialize(handlers : Array(GeneralHandler::Handler(T)))
-      @handler = GeneralHandler::Server(T).build_middleware(handlers)
+    def initialize(handlers : Array(Handlebars::Handler(T)))
+      @handler = Handlebars::Server(T).build_middleware(handlers)
     end
 
-    def initialize(handlers : Array(GeneralHandler::Handler(T)), &handler : T ->)
-      @handler = GeneralHandler::Server(T).build_middleware(handlers, handler)
+    def initialize(handlers : Array(Handlebars::Handler(T)), &handler : T ->)
+      @handler = Handlebars::Server(T).build_middleware(handlers, handler)
     end
 
     def before_process(context : T); end

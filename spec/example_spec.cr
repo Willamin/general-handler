@@ -1,4 +1,4 @@
-require "../src/general_handler.cr"
+require "../src/handlebars.cr"
 
 class ResponseContext
   property input : String
@@ -7,7 +7,7 @@ class ResponseContext
   def initialize(@input); end
 end
 
-class HelloHandler < GeneralHandler::Handler(ResponseContext)
+class HelloHandler < Handlebars::Handler(ResponseContext)
   def call(context)
     case context.input
     when "hello"
@@ -18,7 +18,7 @@ class HelloHandler < GeneralHandler::Handler(ResponseContext)
   end
 end
 
-class ByeHandler < GeneralHandler::Handler(ResponseContext)
+class ByeHandler < Handlebars::Handler(ResponseContext)
   def call(context)
     case context.input
     when "bye"
@@ -29,7 +29,7 @@ class ByeHandler < GeneralHandler::Handler(ResponseContext)
   end
 end
 
-class ResponseServer < GeneralHandler::Server(ResponseContext)
+class ResponseServer < Handlebars::Server(ResponseContext)
   def run(s : String)
     c = ResponseContext.new(s)
     process(c)
@@ -53,6 +53,6 @@ STDOUT.puts "The following should output \"error rescued\""
 STDOUT.print " # => "
 begin
   server.run("uh-oh")
-rescue GeneralHandler::NoHandlerError
+rescue Handlebars::NoHandlerError
   puts "error rescued"
 end
